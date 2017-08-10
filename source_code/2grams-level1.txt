@@ -1,0 +1,288 @@
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import division
+from keras.models import Sequential
+from keras.layers import Dense,Dropout, Activation, Flatten
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.optimizers import SGD
+from keras.utils import np_utils, generic_utils
+from keras.callbacks import Callback
+from keras.models import model_from_json
+import os
+import theano
+import h5py
+import gzip
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+import re
+import shutil
+from numpy import random
+
+fq=open('blosum.txt','r')
+blosum=fq.read()
+
+with open('/home/liman/training.fasta', 'r') as ff:
+    with open('classitrain.fasta', 'w') as gg:
+        with open('trainname.fasta','w') as hh:
+            for line in ff.readlines():
+                if '>' not in line:
+                    gg.write(line)
+                if '>' in line:
+                    hh.write(line)
+                                        
+
+ff.close()
+gg.close()
+hh.close()
+
+fw=open('classitrain.fasta', 'r')
+seq=[]
+index=1
+matrix=[]
+matrix1=[]
+
+for line in fw.readlines():
+    length=len(line)
+    if(index < 2031):
+        for i in range(20):
+            for j in range(20):
+                str=blosum[i]+blosum[j]
+                strnum=0
+                for k in range(length-1):
+                    str1=line[k]+line[k+1]
+                    if(str1==str):
+                        strnum+=1
+
+                matrixint=round((strnum/length),3)*1000
+                matrix.append(matrixint)
+
+    if(index > 2030):
+        for i in range(20):
+            for j in range(20):
+                str=blosum[i]+blosum[j]
+                strnum1=0
+                for w in range(length-1):
+                    str2=line[w]+line[w+1]
+                    if(str2==str):
+                        strnum1+=1
+                matrix1int=round((strnum1/length),3)*1000
+                matrix1.append(matrix1int)
+    index+=1
+print(index)
+train_label=[]
+for g in range(1010):
+    train_label.append(0)
+for g in range(1020):
+    train_label.append(1)
+#for g in range(32):
+#    train_label.append(2)
+#for g in range(207):
+#    train_label.append(3)
+#for g in range(21):
+#    train_label.append(4)
+'''for g in range(47):
+   train_label.append(5)
+for g in range(8):
+    train_label.append(6)
+for g in range(4):
+    train_label.append(7)
+for g in range(3):
+    train_label.append(8)
+for g in range(15):
+    train_label.append(9)
+for g in range(17):
+    train_label.append(10)
+for g in range(11):
+    train_label.append(11)
+for g in range(4):
+    train_label.append(12)
+for g in range(9):
+    train_label.append(13)
+for g in range(10):
+    train_label.append(14)
+for g in range(7):
+    train_label.append(15)
+for g in range(81):
+    train_label.append(16)
+for g in range(8):
+    train_label.append(17)
+for g in range(2):
+    train_label.append(18)
+for g in range(5):
+    train_label.append(19)
+for g in range(9):
+    train_label.append(20)
+for g in range(14):
+    train_label.append(21)
+for g in range(3):
+    train_label.append(22)
+for g in range(9):
+    train_label.append(23)
+for g in range(5):
+    train_label.append(24)
+for g in range(9):
+    train_label.append(25)
+for g in range(10):
+    train_label.append(26)
+for g in range(3):
+    train_label.append(27)
+for g in range(8):
+    train_label.append(28)
+for g in range(2):
+    train_label.append(29)
+for g in range(16):
+    train_label.append(30)
+for g in range(3):
+    train_label.append(31)
+'''                        
+                                                                                    
+newshape_train=(2030,1,20,20)
+X_train=np.reshape(matrix,newshape_train)
+train_label= np_utils.to_categorical(train_label,2)
+
+model = Sequential()
+
+model.add(Convolution2D(4, 1,1,init='uniform', border_mode='valid',input_shape=(1,20,20) ,weights=None , subsample=(1, 1)))
+model.add(Activation('tanh'))
+
+model.add(Flatten())
+model.add(Dense(240,init='normal'))
+model.add(Activation('tanh'))
+model.add(Dense(2,init='normal'))
+model.add(Activation('softmax'))
+
+sgd = SGD(lr=0.01, decay=0.0001, momentum=0.6, nesterov=True)
+model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
+model.fit(X_train,train_label, batch_size=10,nb_epoch=300,shuffle=True,verbose=1)
+
+json_string = model.to_json()
+open('my_model_architecture.json','w').write(json_string)
+model.save_weights('my_model_weights.h5')
+
+model = model_from_json(open('my_model_architecture.json').read())
+model.load_weights('my_model_weights.h5')  
+
+newshape_test=(140,1,20,20)
+X_test=np.reshape(matrix1,newshape_test)
+result=model.predict(X_test, batch_size=10, verbose=1)
+result2=model.predict_classes(X_test, batch_size=10, verbose=1)
+
+acc=0.0
+truelabel=0
+#seq=[[0 for col in range(total)] for row in range(total)]
+#result1=np.argsort(-result)
+for s in range(0,19):
+    if ((result2[s])==0):
+        truelabel=truelabel+1
+for s in range(19,39):
+    if ((result2[s])==1):
+        truelabel=truelabel+1
+for s in range(39,52):
+    if ((result2[s])==0):
+        truelabel=truelabel+1
+for s in range(52,64):
+    if ((result2[s])==1):
+        truelabel=truelabel+1
+for s in range(64,77):
+    if ((result2[s])==0):
+        truelabel=truelabel+1
+for s in range(77,91):
+    if ((result2[s])==1):
+        truelabel=truelabel+1
+for s in range(91,108):
+    if ((result2[s])==0):
+        truelabel=truelabel+1
+for s in range(108,126):
+    if ((result2[s])==1):
+        truelabel=truelabel+1
+for s in range(126,133):
+    if ((result2[s])==0):
+        truelabel=truelabel+1
+for s in range(133,140):
+    if ((result2[s])==1):
+        truelabel=truelabel+1
+        '''
+for s in range(152,169):
+    if ((result2[s])==10):
+        truelabel=truelabel+1
+for s in range(169,179):
+    if ((result2[s])==11):
+        truelabel=truelabel+1
+for s in range(179,182):
+    if ((result2[s])==12):
+        truelabel=truelabel+1
+for s in range(182,190):
+    if ((result2[s])==13):
+        truelabel=truelabel+1
+for s in range(190,200):
+    if ((result2[s])==14):
+        truelabel=truelabel+1
+for s in range(200,207):
+    if ((result2[s])==15):
+        truelabel=truelabel+1
+for s in range(207,288):
+    if ((result2[s])==16):
+        truelabel=truelabel+1
+for s in range(288,296):
+    if ((result2[s])==17):
+        truelabel=truelabel+1
+for s in range(296,297):
+    if ((result2[s])==18):
+        truelabel=truelabel+1
+for s in range(297,301):
+    if ((result2[s])==19):
+        truelabel=truelabel+1
+for s in range(301,309):
+    if ((result2[s])==20):
+        truelabel=truelabel+1
+for s in range(309,322):
+    if ((result2[s])==21):
+        truelabel=truelabel+1
+for s in range(322,325):
+    if ((result2[s])==22):
+        truelabel=truelabel+1
+for s in range(325,333):
+    if ((result2[s])==23):
+        truelabel=truelabel+1
+for s in range(333,338):
+    if ((result2[s])==24):
+        truelabel=truelabel+1
+for s in range(338,347):
+    if ((result2[s])==25):
+        truelabel=truelabel+1
+for s in range(347,357):
+    if ((result2[s])==26):
+        truelabel=truelabel+1
+for s in range(357,359):
+    if ((result2[s])==27):
+        truelabel=truelabel+1
+for s in range(359,366):
+    if ((result2[s])==28):
+        truelabel=truelabel+1
+for s in range(366,368):
+    if ((result2[s])==29):
+        truelabel=truelabel+1
+for s in range(368,384):
+    if ((result2[s])==30):
+        truelabel=truelabel+1
+for s in range(384,386):
+    if ((result2[s])==31):
+        truelabel=truelabel+1
+'''                                                
+acc=truelabel/140
+
+print("\n pro:\n",result)
+print("test_accuracy:",acc)
+#print(result1)
+#fj=open('uniprot_use2.fasta','r')
+#lines=fj.readlines()
+#for i in range(1):
+#    for j in range(100):
+#        print(lines[(result1[i][j])],end=" ")
+#        print(result[i][result1[i][j]],end="\n")
+                                       
+#fj.close()
+fw.close()
+
+

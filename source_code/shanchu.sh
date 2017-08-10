@@ -1,0 +1,68 @@
+#!/bin/bash
+for(( i=0;i<2;i++))
+do
+	sed -i '1d' 'J1.fasta'
+	sed -i '1d' 'J3.fasta'
+	sed -i '1d' 'D1.fasta'
+	sed -i '1d' 'D2.fasta'
+	sed -i '1d' 'E1.fasta'
+	sed -i '1d' 'E2.fasta'
+	sed -i '1d' 'O1.fasta'
+	sed -i '1d' 'P1.fasta'
+	sed -i '1d' 'Q1.fasta'
+	sed -i '1d' 'R1.fasta'
+	sed -i '1d' 'M1.fasta'
+	sed -i '1d' 'M3.fasta'
+	sed -i '1d' 'K1.fasta'
+	sed -i '1d' 'K3.fasta'
+	sed -i '1d' 'I2.fasta'
+	sed -i '1d' 'I8.fasta'
+	sed -i '1d' 'I12.fasta'
+	sed -i '1d' 'I17.fasta'
+	sed -i '1d' 'H1.fasta'
+	sed -i '1d' 'H2.fasta'
+	sed -i '1d' 'H3.fasta'
+	sed -i '1d' 'H4.fasta'
+	sed -i '1d' 'H5.fasta'
+	sed -i '1d' 'H6.fasta'
+	sed -i '1d' 'H7.fasta'
+	sed -i '1d' 'H8.fasta'
+	sed -i '1d' 'A5.fasta'
+	sed -i '1d' 'C1.fasta'
+	sed -i '1d' 'I15.fasta'
+	sed -i '1d' 'J2.fasta'
+done
+for((j=0;j<6;j++))
+do
+	sed -i '1d' 'A1.fasta'
+	sed -i '1d' 'A2.fasta'
+	sed -i '1d' 'A3.fasta'
+	sed -i '1d' 'A4.fasta'
+	
+	sed -i '1d' 'A6.fasta'
+	sed -i '1d' 'B1.fasta'
+	
+	sed -i '1d' 'F1.fasta'
+	sed -i '1d' 'G1.fasta'
+	sed -i '1d' 'I1.fasta'
+	sed -i '1d' 'I3.fasta'
+	sed -i '1d' 'I4.fasta'
+	sed -i '1d' 'I5.fasta'
+	sed -i '1d' 'I6.fasta'
+	sed -i '1d' 'I7.fasta'
+	sed -i '1d' 'I9.fasta'
+	sed -i '1d' 'I10.fasta'
+	sed -i '1d' 'I11.fasta'
+	sed -i '1d' 'I13.fasta'
+	sed -i '1d' 'I14.fasta'
+	
+	sed -i '1d' 'I16.fasta'
+	sed -i '1d' 'I18.fasta'
+	
+	sed -i '1d' 'K2.fasta'
+	sed -i '1d' 'L1.fasta'
+	sed -i '1d' 'M2.fasta'
+	sed -i '1d' 'N1.fasta'
+	sed -i '1d' 'N2.fasta'
+done
+
