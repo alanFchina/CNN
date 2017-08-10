@@ -1,6 +1,5 @@
-# README
-
 This document guides you to use the tool. 
+————————————
 
 		The codes are written in python and bash. Before executing the .sh files, you need install muscle, bash, python(version 2.7+),and keras,which has the following dependencies: 
 			numpy, scipy, pyaml, HDF5, h5py (optional, required if you use model saving/loading functions)
