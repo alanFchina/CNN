@@ -10,5 +10,4 @@ and keras,which has the following dependencies:<br>
 >The OS that we tested the tool is Ubuntu 16.04.1. To run the codes, enter each folder and input the original protein sequences in the .fasta file.
 
 >Extracting test sequences in order(chouqu.py),then deleting test sequences which are in original .fasta file(shanchu.sh), using  muscle to alignment protein sequences(chuli.py),and extracting characteristics sequences (tiqu.py),inserting test sequences into modeling file(tianjia.py). The bash script integrates above operations.So,you just need run chuli.sh to get the feature sequences. At last，extracting the N-gram features, training the classifier and conduct a testing in multiple.py,Command line format as:
-
->THEANO_FLAGS=device=gpu, floatX=float32 python multiple.py
+>>THEANO_FLAGS=device=gpu, floatX=float32 python multiple.py
